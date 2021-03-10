@@ -33,9 +33,12 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-## All installation Sources
+## All installation Sources (&& Steps)
 
 - https://nextjs.org/docs/getting-started
+
+##### Prettier
+
 - https://prettier.io/docs/en/install.html
 
   - `npm install --save-dev --save-exact prettier`
@@ -43,6 +46,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
   - `echo "# Ignore artifacts: \n build \n coverage" > .prettierignore`
   - Add some Files and Dirs from my `.gitignore`
   - `npx prettier --write .`
+
+##### TypeScript
 
 - https://nextjs.org/learn/excel/typescript/create-tsconfig
   - `echo '' > tsconfig.json`
@@ -56,7 +61,49 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
     - `mv pages/posts/[id].js pages/posts/[id].tsx`
     - `mv pages/index.js pages/index.tsx`
     - `mv pages/_app.js pages/_app.tsx`
-    - `mv pages/api/hello.js pages/api/hello.tsx`
+    - `mv pages/api/hello.js pages/api/hello.ts`
 - https://nextjs.org/docs/basic-features/typescript
   - `npm run dev`
-- ESLINT
+  - Add 'AppProps' in \_app.tsx:
+  - ```import type { AppProps /_, AppContext _/ } from 'next/app'
+    import "../styles/globals.css";
+    function MyApp({ Component, pageProps }): AppProps {
+    return <Component {...pageProps} />;
+    }
+    export default MyApp;
+    ```
+  - Update the `hello.ts` Example:
+  - ```import type {NextApiRequest, NextApiResponse} from "next";
+      type Data = {
+      name: string;
+      };
+      export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
+      res.status(200).json({name: "John Doe"});
+    };
+    ```
+
+##### ESLint
+
+- https://eslint.org/docs/user-guide/getting-started
+
+  - `npm install eslint --save-dev`
+  - `npx eslint --init`
+
+    - ✔ How would you like to use ESLint? · `problems`
+    - ✔ What type of modules does your project use? · `esm`
+    - ✔ Which framework does your project use? · `react`
+    - ✔ Does your project use TypeScript? · No / `Yes`
+    - ✔ Where does your code run? · `browser`, `node`
+    - ✔ What format do you want your config file to be in? · `JSON`
+    - SHELL: The config that you've selected requires the following dependencies:
+    - SHELL: eslint-plugin-react@latest @typescript-eslint/eslint-plugin@latest @typescript-eslint/parser@latest
+    - ✔ Would you like to install them now with npm? · No / `Yes`
+    - `npm run prettify`
+    - https://github.com/prettier/eslint-config-prettier
+    - `npm install --save-dev eslint-config-prettier`
+    - Then, add eslint-config-prettier to the "extends" array in your .eslintrc.\* file. Make sure to put it _last_, so it gets the chance to override other configs.
+    - e.g.: `"extends": [ "eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended", "prettier" ],`
+    - AND add the Rules "react/react-in-jsx-scope": "off" and "@typescript-eslint/explicit-module-boundary-types": "off":
+      - `"rules": { "react/react-in-jsx-scope": "off", "@typescript-eslint/explicit-module-boundary-types": "off" }`
+    - AND add a Setting Part after the rules ... think of the comma after teh rules Object!!!
+      - `"settings": { "react": { "version": "detect" } }`
