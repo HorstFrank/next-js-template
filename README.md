@@ -107,3 +107,14 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
       - `"rules": { "react/react-in-jsx-scope": "off", "@typescript-eslint/explicit-module-boundary-types": "off" }`
     - AND add a Setting Part after the rules ... think of the comma after teh rules Object!!!
       - `"settings": { "react": { "version": "detect" } }`
+
+#### StyleLint
+
+- https://stylelint.io/user-guide/get-started
+  - `npm install --save-dev stylelint stylelint-config-standard`
+  - `echo '{\n"extends": "stylelint-config-standard"\n}' > .stylelintrc.json`
+  - check the installation with: `npx stylelint "**/*.css"`
+  - Add a style script `"slint": "stylelint '**/*.css' ",`
+- https://github.com/prettier/stylelint-config-prettier
+  - `npm install --save-dev stylelint-config-prettier`
+  - Then, append stylelint-config-prettier to the extends array in your `.stylelintrc.\*` file. Make sure to put it last, so it will override other configs. ` { "extends": [ "stylelint-config-standard", "stylelint-config-prettier" ] }`
