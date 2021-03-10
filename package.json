@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "prettify": "node prettier"
+    "prettify": "prettier --write ."
   },
   "dependencies": {
     "next": "10.0.8",
