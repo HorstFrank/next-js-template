@@ -37,8 +37,25 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - https://nextjs.org/docs/getting-started
 - https://prettier.io/docs/en/install.html
+
   - `npm install --save-dev --save-exact prettier`
   - `echo {}> .prettierrc.json`
   - `echo "# Ignore artifacts: \n build \n coverage" > .prettierignore`
   - Add some Files and Dirs from my `.gitignore`
   - `npx prettier --write .`
+
+- https://nextjs.org/learn/excel/typescript/create-tsconfig
+  - `echo '' > tsconfig.json`
+    - https://www.typescriptlang.org/docs/handbook/compiler-options.html
+  - `npm install --save-dev typescript @types/react @types/node`
+  - `echo '' > next-env.d.ts`
+  - update some files suffixes:
+    - `mv components/date.js components/date.tsx`
+    - `mv components/layout.js components/layout.tsx`
+    - `mv lib/posts.js lib/posts.tsx`
+    - `mv pages/posts/[id].js pages/posts/[id].tsx`
+    - `mv pages/index.js pages/index.tsx`
+    - `mv pages/_app.js pages/_app.tsx`
+    - `mv pages/api/hello.js pages/api/hello.tsx`
+- https://nextjs.org/docs/basic-features/typescript
+  - `npm run dev`
