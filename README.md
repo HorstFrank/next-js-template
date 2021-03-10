@@ -37,7 +37,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - https://nextjs.org/docs/getting-started
 - https://prettier.io/docs/en/install.html
-
   - `npm install --save-dev --save-exact prettier`
-  - `touch .prettierignore > # Ignore artifacts: \n build \n coverage`
+  - `echo {}> .prettierrc.json`
+  - `echo "# Ignore artifacts: \n build \n coverage" > .prettierignore`
+  - Add some Files and Dirs from my `.gitignore`
   - `npx prettier --write .`
