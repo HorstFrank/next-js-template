@@ -59,3 +59,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
     - `mv pages/api/hello.js pages/api/hello.tsx`
 - https://nextjs.org/docs/basic-features/typescript
   - `npm run dev`
+- ESLINT
