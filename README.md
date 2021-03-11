@@ -37,6 +37,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 - https://nextjs.org/docs/getting-started
 
+- `npx create-next-app`
+
 ##### Prettier
 
 - https://prettier.io/docs/en/install.html
@@ -169,3 +171,50 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - `echo '.btn {\n border-radius: 10px;\n}\n\n.primary {\ncolor: antiquewhite;\nbackground: black;\n}' > components/ExampleButton/Button.module.css`
 - `echo 'import React from "react";\n\nimport { Story, Meta } from "@storybook/react/types-6-0";\nimport Button, { ButtonProps } from "./Button";\n\nexport default {\n title: "Common/Button",\n component: Button,\n} as Meta;\n\nconst Template: \nStory<ButtonProps> = (args) => <Button {...args} />;\n\nexport const Primary = Template.bind({});\nPrimary.args = {\n primary: true,\n label: "Button",\n };\n\nexport const Secondary = Template.bind({});\n Secondary.args = {\n label: "Button",\n};\n' > components/ExampleButton/Button.stories.tsx`
 - `echo 'import "./Button.module.css";\n\nexport type ButtonProps = {\n primary: boolean;\n label: string;\n};\n\nfunction Button({ primary, label, ...props }: ButtonProps) {\n return (\n <button className={`btn ${primary ? "primary" : ""}`} {...props}>\n {label}\n </button>\n );\n}\n\nexport default Button;' > components/ExampleButton/Button.tsx`
+
+##### custom-server
+
+A custom server supports consistent connections with web sockets or databases and allows custom routing.
+Guides:
+https://nextjs.org/docs/advanced-features/custom-server
+https://github.com/vercel/next.js/tree/canary/examples/custom-server-typescript
+
+Steps:
+
+Add server folder with server/index.ts. This is the server entry point with a custom route for /storybook to allow a deployment of the app and storybook on a single server. All other requests are forwarded to next request handler.
+
+`mkdir server && echo '' > server/index.ts`
+
+`npm i -D nodemon ts-node `which is required for the new dev script.
+
+Add tsconfig.server.json for a custom TypeScript config for the server side. The existing tsconfig is extended, but it's required to change the module (More details).
+
+`echo '{\n "extends": "./tsconfig.json",\n "compilerOptions": {\n "module": "commonjs",\n "outDir": "build",\n "target": "es2017",\n "isolatedModules": false,\n "noEmit": false\n },\n "include": ["server/**/*.ts"]\n\n}' > tsconfig.server.json`
+
+Add nodemon.json to configure nodemon. The server folder is watched.
+
+`echo '{\n "watch": ["server"],\n "exec": "ts-node --project tsconfig.server.json server/index.ts",\n "ext": "js ts"\n}' > nodemon.json`
+
+Add and update dev, build-next, build-server, build and start scripts.
+
+`sed -i -e 's/"dev": "next dev"/"dev": "nodemon"/g' package.json`
+
+`sed -i -e 's/"build": "next build"/"build": "next build \&\& tsc --project tsconfig.server.json"/g' package.json`
+
+`sed -i -e 's/"start": "next start"/"start": "NODE_ENV=production node build\/index.js"/g' package.json`
+
+npm run dev is used in development with hot module replacement.
+npm run build creates optimized client, storybook and server builds.
+npm start calls the server build.
+
+Please verify that all scripts are working and try out /storybook route.
+
+Notes:
+
+A custom server can not be deployed on Vercel, the platform Next.js was made for.
+
+"build": "npm run build-next && npm run build-storybook && npm run server",
+
+    "build-next": "next build",
+    "build-storybook": "build-storybook",
+    "build-server": "tsc --project tsconfig.server.json"
