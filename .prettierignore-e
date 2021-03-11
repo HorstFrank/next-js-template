@@ -16,4 +16,3 @@ coverage
 
 # production
 /build
-/storybook-static
