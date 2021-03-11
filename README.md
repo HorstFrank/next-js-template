@@ -106,15 +106,66 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
     - AND add the Rules "react/react-in-jsx-scope": "off" and "@typescript-eslint/explicit-module-boundary-types": "off":
       - `"rules": { "react/react-in-jsx-scope": "off", "@typescript-eslint/explicit-module-boundary-types": "off" }`
     - AND add a Setting Part after the rules ... think of the comma after teh rules Object!!!
+
       - `"settings": { "react": { "version": "detect" } }`
 
-#### StyleLint
+      // ???? ausformulieren:
+
+    - `.gitignore`
+    - `.eslintcache`
+    - `.eslintignore` wie prittier ignore
+
+##### StyleLint
 
 - https://stylelint.io/user-guide/get-started
   - `npm install --save-dev stylelint stylelint-config-standard`
   - `echo '{\n"extends": "stylelint-config-standard"\n}' > .stylelintrc.json`
   - check the installation with: `npx stylelint "**/*.css"`
-  - Add a style script `"slint": "stylelint '**/*.css' ",`
+  - Add a style script `"slint": "stylelint '**/*.css'",` in `package.json`
+
+###### StyleLint with Prettier
+
 - https://github.com/prettier/stylelint-config-prettier
   - `npm install --save-dev stylelint-config-prettier`
   - Then, append stylelint-config-prettier to the extends array in your `.stylelintrc.\*` file. Make sure to put it last, so it will override other configs. ` { "extends": [ "stylelint-config-standard", "stylelint-config-prettier" ] }`
+
+##### Husky
+
+- https://typicode.github.io/husky/#/
+
+  - `npm install husky --save-dev && npx husky init`
+  - `npm install husky --save-dev && npx husky init husky`
+  - `npm i -D lint-staged lint-staged`
+  - `echo '{\n "*.css": "stylelint --fix",\n "*.{js,jsx,ts,tsx}": "eslint --cache --fix",\n "*.{js,jsx,ts,tsx,css,md,json}": "prettier --write"\n }' > .lintstagedrc.json`
+  - `echo '#!/bin/sh \n. "$(dirname "$0")/\_/husky.sh" \n \n run npx lint-staged --config .lintstagedrc.json \n' > .husky/pre-commit`
+    - Add in Scripts of `package.json`: `"prettycheck": "prettier --check .",`, `"prepare": "husky install",`,`"typecheck": "tsc",`,`"test": "npm run lint && npm run slint && npm run prettycheck && npm run typecheck"`
+  - `npx husky add .husky/pre-push "npm test"`
+
+  - Notes: You can skip verification with --no-verify in your git commands.
+
+##### Storybook
+
+- https://storybook.js.org/docs/react/get-started/install
+
+  - install storybook with: `npx sb init`
+  - Check the Storybook with `npm run storybook`
+  - Remove example stories folder with: `rm -r stories`
+
+- Set stories folder in `.storybook/main.js` : `sed -i -e 's/\/stories\//\/components\//g' .storybook/main.js`
+- !! Load example component in pages/index.tsx
+- TODO!!!!!!!!!
+- Ignore /storybook-static in `.gitignore` and `.prettierignore`:
+
+  - `sed -i -e 's/\/build/\/build\n\/storybook-static/g' .gitignore`
+  - `sed -i -e 's/\/build/\/build\n\/storybook-static/g' .prettierignore`
+
+- Create .eslintcache ans copy the content from .prettierignore: `cat .prettierignore > .eslintignore`
+- And ignore the .eslintignore in .gitignore: `sed -i -e 's/# misc/# misc\n.eslintcache/g' .gitignore`
+
+- https://reactjs.org/docs/faq-structure.html
+
+- Create components folder with example Button component: `mkdir components && mkdir components/ExampleButton`
+- Create the Button tsx, stories.tsx and css
+- `echo '.btn {\n border-radius: 10px;\n}\n\n.primary {\ncolor: antiquewhite;\nbackground: black;\n}' > components/ExampleButton/Button.module.css`
+- `echo 'import React from "react";\n\nimport { Story, Meta } from "@storybook/react/types-6-0";\nimport Button, { ButtonProps } from "./Button";\n\nexport default {\n title: "Common/Button",\n component: Button,\n} as Meta;\n\nconst Template: \nStory<ButtonProps> = (args) => <Button {...args} />;\n\nexport const Primary = Template.bind({});\nPrimary.args = {\n primary: true,\n label: "Button",\n };\n\nexport const Secondary = Template.bind({});\n Secondary.args = {\n label: "Button",\n};\n' > components/ExampleButton/Button.stories.tsx`
+- `echo 'import "./Button.module.css";\n\nexport type ButtonProps = {\n primary: boolean;\n label: string;\n};\n\nfunction Button({ primary, label, ...props }: ButtonProps) {\n return (\n <button className={`btn ${primary ? "primary" : ""}`} {...props}>\n {label}\n </button>\n );\n}\n\nexport default Button;' > components/ExampleButton/Button.tsx`
